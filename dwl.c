@@ -800,16 +800,18 @@ axisnotify(struct wl_listener *listener, void *data)
 
 	wlr_idle_notifier_v1_notify_activity(idle_notifier, seat);
 
-	if (event->orientation == WL_POINTER_AXIS_VERTICAL_SCROLL)
-		adir = event->delta > 0 ? AxisDown : AxisUp;
-	else
-		adir = event->delta > 0 ? AxisRight : AxisLeft;
-	keyboard = wlr_seat_get_keyboard(seat);
-	mods = keyboard ? wlr_keyboard_get_modifiers(keyboard) : 0;
-	for (a = axes; a < END(axes); a++) {
-		if (CLEANMASK(mods) == CLEANMASK(a->mod) && adir == a->dir && a->func) {
-			a->func(&a->arg);
-			return;
+	if (!locked) {
+		if (event->orientation == WL_POINTER_AXIS_VERTICAL_SCROLL)
+			adir = event->delta > 0 ? AxisDown : AxisUp;
+		else
+			adir = event->delta > 0 ? AxisRight : AxisLeft;
+		keyboard = wlr_seat_get_keyboard(seat);
+		mods = keyboard ? wlr_keyboard_get_modifiers(keyboard) : 0;
+		for (a = axes; a < END(axes); a++) {
+			if (CLEANMASK(mods) == CLEANMASK(a->mod) && adir == a->dir && a->func) {
+				a->func(&a->arg);
+				return;
+			}
 		}
 	}
 
