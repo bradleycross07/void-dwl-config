@@ -2288,7 +2288,7 @@ int
 keyrepeat(void *data)
 {
 	KeyboardGroup *group = data;
-	if (group->wlr_group->keyboard.repeat_info.rate <= 0)
+	if (locked || group->wlr_group->keyboard.repeat_info.rate <= 0)
 		return 0;
 
 	wl_event_source_timer_update(group->key_repeat_source,
