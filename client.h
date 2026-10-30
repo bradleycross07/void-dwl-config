@@ -40,7 +40,6 @@ client_get_size_hints(Client *c, struct wlr_box *max, struct wlr_box *min)
 	min->height = state->min_height;
 }
 
-
 static inline struct wlr_surface *
 client_surface(Client *c)
 {
@@ -155,6 +154,18 @@ client_get_appid(Client *c)
 		return c->surface.xwayland->class ? c->surface.xwayland->class : "broken";
 #endif
 	return c->surface.xdg->toplevel->app_id ? c->surface.xdg->toplevel->app_id : "broken";
+}
+
+static inline int
+client_get_pid(Client *c)
+{
+	pid_t pid;
+#ifdef XWAYLAND
+	if (client_is_x11(c))
+		return c->surface.xwayland->pid;
+#endif
+	wl_client_get_credentials(c->surface.xdg->client->client, &pid, NULL, NULL);
+	return pid;
 }
 
 static inline void
