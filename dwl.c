@@ -3141,12 +3141,10 @@ setmon(Client *c, Monitor *m, uint32_t newtags)
 void
 setpsel(struct wl_listener *listener, void *data)
 {
-	/* This event is raised by the seat when a client wants to set the selection,
-	 * usually when the user copies something. wlroots allows compositors to
-	 * ignore such requests if they so choose, but in dwl we always honor them
-	 */
-	struct wlr_seat_request_set_primary_selection_event *event = data;
-	wlr_seat_set_primary_selection(seat, event->source, event->serial);
+	/* Primary selection disabled: ignore requests so middle-click
+	 * has nothing to paste. */
+	(void)listener;
+	(void)data;
 }
 
 void
